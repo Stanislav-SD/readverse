@@ -30,7 +30,7 @@ interface ShelfGroup {
 }
 
 const checkAuth = (context) => {
-    if (!context.user) throw new Error('UNAUTHORIZED');
+    if (!context.user || !context.user.Id) throw new Error('UNAUTHORIZED');
 };
 
 // GraphQL Resolvers
@@ -48,11 +48,13 @@ const resolvers = {
         getGenres: async (_: any) => {
             const genres = await prisma.genre.findMany();
             // console.log(await prisma.genre.findMany());
-            console.log(genres);
+            // console.log(genres);
             return genres;
         },
-        topGenreRecommendations: async (_: any, args: { take: number; },  { userId }: { userId: number }) => {
-            if ( !userId ) throw new Error("Unauthorized");
+        topGenreRecommendations: async (_: any, args: { take: number; },  context: { user: any }) => {
+            checkAuth(context);
+            const userId = context.user.Id;
+
             const take = args.take;
             try {
                 const userReadingSessions = await prisma.readingSessionStat.findMany({
