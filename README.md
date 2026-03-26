@@ -46,3 +46,7 @@ This mode is designed to be self-contained. It pulls the necessary dependencies,
 
 ## 🏗 Architecture
 Readverse utilizes **GraphQL** to allow efficient, flexible data fetching, minimizing over-fetching and under-fetching. The entire codebase is written in **TypeScript**, ensuring strong type safety across the full stack and improving long-term maintainability.
+
+<img width="1907" height="839" alt="image" src="https://github.com/user-attachments/assets/2e5d4352-4e58-4f52-a580-00e6795af020" />
+<img width="1910" height="851" alt="image" src="https://github.com/user-attachments/assets/3bedae49-f7c2-4a08-bdce-27faa916ba71" />
+
