@@ -1,0 +1,53 @@
+{
+  "name": "boocktracker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.12.8",
+    "@as-integrations/next": "^3.2.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.2.1",
+    "@types/formidable": "^3.4.5",
+    "@types/multer": "^1.4.12",
+    "@types/multiparty": "^4.2.1",
+    "apollo-server-micro": "^3.13.0",
+    "chart.js": "^4.4.7",
+    "cookie": "^1.0.2",
+    "cors": "^2.8.5",
+    "formidable": "^3.5.2",
+    "graphql": "^16.10.0",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.476.0",
+    "next": "^15.1.7",
+    "next-auth": "^4.24.11",
+    "nookies": "^2.5.2",
+    "prisma": "^6.1.0",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.3.8",
+    "react-icons": "^5.4.0",
+    "swiper": "^12.1.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "15.1.0",
+    "eslint-plugin-jsdoc": "^50.6.1",
+    "postcss": "^8",
+    "prettier": "^3.4.1",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

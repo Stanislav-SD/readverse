@@ -1,0 +1,14 @@
+services:
+  backend:
+    command: npm run start
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=${WATCHPACK_POLLING}

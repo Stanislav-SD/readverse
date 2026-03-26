@@ -1,0 +1,26 @@
+/* Custom Scrollbar */
+.custom-scroll-container {
+  padding-bottom: 5px;
+  width: 100%;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #888 #000000; /* Firefox scrollbar colors */
+}
+  
+.custom-scroll-container::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.custom-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Track color */
+  border-radius: 30px; /* Border radius of the track */
+}
+
+.custom-scroll-container::-webkit-scrollbar-thumb {
+  background: #4a90e2; /* Thumb color */
+  border-radius: 10px; /* Border radius of the thumb */
+}
+
+.custom-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #357ABD; /* Thumb color on hover */
+}
+  

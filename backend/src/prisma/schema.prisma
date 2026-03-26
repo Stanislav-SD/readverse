@@ -1,0 +1,178 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  Id          Int        @id @default(autoincrement())
+  Username    String
+  Email       String     @unique @db.VarChar(255)
+  Password    String     @db.VarChar(255)
+  Role        Role       @default(USER)
+  TwoFASecret String?
+  Status      Status     @default(OFFLINE)
+  Visibility  Visibility @default(PUBLIC)
+  LastActive  DateTime?
+  CreatedAt   DateTime   @default(now())
+
+  BookStat           BookStat[]
+  GeneralShelf       GeneralShelf[]
+  Rating             Rating[]
+  ReadingSessionStat ReadingSessionStat[]
+  FriendsInitiated   Friends[]            @relation("UserFriends")
+  FriendsReceived    Friends[]            @relation("FriendUsers")
+  RefreshTokens      RefreshTokens[]
+  UserBadges         UserBadges[]         @relation("UserBadge")
+}
+
+model RefreshTokens {
+  Id        Int      @id @default(autoincrement())
+  UserId    Int
+  Token     String
+  DeviceId  String
+  CreatedAt DateTime @default(now())
+  ExpiresAt DateTime
+  User      User     @relation(fields: [UserId], references: [Id])
+
+  @@unique([UserId, DeviceId])
+}
+
+model Friends {
+  Id        Int          @id @default(autoincrement())
+  UserId    Int
+  FriendId  Int
+  Status    FriendStatus @default(PENDING)
+  CreatedAt DateTime     @default(now())
+  User      User         @relation("UserFriends", fields: [UserId], references: [Id])
+  Friend    User         @relation("FriendUsers", fields: [FriendId], references: [Id])
+}
+
+model Badges {
+  Id         Int    @id @default(autoincrement())
+  Image      String @db.VarChar(255)
+  Label      String @db.VarChar(255)
+  Quest      String @db.VarChar(255)
+  Conditions Json
+
+  UserBadges UserBadges[] @relation("BadgeUser")
+}
+
+model UserBadges {
+  Id       Int      @id @default(autoincrement())
+  UserId   Int
+  BadgeId  Int
+  EarnedAt DateTime @default(now())
+
+  User  User   @relation("UserBadge", fields: [UserId], references: [Id])
+  Badge Badges @relation("BadgeUser", fields: [BadgeId], references: [Id])
+
+  @@unique([UserId, BadgeId])
+}
+
+model Book {
+  Id           Int            @id @default(autoincrement())
+  Title        String         @db.VarChar(255)
+  Image        String?        @db.VarChar(255)
+  Author       String?        @db.VarChar(255)
+  ISBN10       String?        @db.VarChar(255)
+  ISBN13       String?        @db.VarChar(255)
+  Published    DateTime?      @db.DateTime
+  Description  String?        @db.Text
+  Pages        Int?           @default(1)
+  GeneralShelf GeneralShelf[]
+  BookStat     BookStat[]
+  Genre        Genre[]
+  Rating       Rating[]
+}
+
+model Rating {
+  Id        Int      @id @default(autoincrement())
+  UserId    Int
+  BookId    Int
+  Rating    Float
+  CreatedAt DateTime @default(now())
+  Book      Book     @relation(fields: [BookId], references: [Id])
+  User      User     @relation(fields: [UserId], references: [Id])
+
+  @@unique([BookId, UserId])
+}
+
+model Genre {
+  Id   Int    @id @default(autoincrement())
+  Name String @unique
+  Book Book[] // Many-to-many relation
+}
+
+model GeneralShelf {
+  Id     Int       @id @default(autoincrement())
+  Shelf  BaseShelf @default(WISHLIST)
+  UserId Int
+  BookId Int
+  Book   Book      @relation(fields: [BookId], references: [Id])
+  User   User      @relation(fields: [UserId], references: [Id])
+
+  @@unique([BookId, UserId])
+}
+
+model BookStat {
+  Id                 Int                  @id @default(autoincrement())
+  UserId             Int
+  BookId             Int
+  ReadTime           Float
+  StartedAt          DateTime             @default(now())
+  FinishedAt         DateTime?
+  Book               Book                 @relation(fields: [BookId], references: [Id])
+  User               User                 @relation(fields: [UserId], references: [Id])
+  ReadingSessionStat ReadingSessionStat[]
+}
+
+model ReadingSessionStat {
+  Id         Int      @id @default(autoincrement())
+  ReadTime   Float
+  Pages      Int
+  BookStatId Int
+  UserId     Int
+  CreatedAt  DateTime @default(now())
+  BookStat   BookStat @relation(fields: [BookStatId], references: [Id])
+  User       User     @relation(fields: [UserId], references: [Id])
+}
+
+enum Role {
+  USER
+  LISTER
+  ADMIN
+}
+
+enum BaseShelf {
+  READING
+  READ
+  WISHLIST
+}
+
+enum Status {
+  ONLINE
+  OFFLINE
+  IDLE
+  DND
+}
+
+enum Visibility {
+  PUBLIC
+  INVISIBLE
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}

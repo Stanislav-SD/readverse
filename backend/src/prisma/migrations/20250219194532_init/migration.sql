@@ -1,0 +1,79 @@
+-- CreateTable
+CREATE TABLE `User` (
+    `Id` INTEGER NOT NULL AUTO_INCREMENT,
+    `Username` VARCHAR(191) NOT NULL,
+    `Email` VARCHAR(255) NOT NULL,
+    `Password` VARCHAR(255) NOT NULL,
+    `Role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+    `TwoFASecret` VARCHAR(191) NULL,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `User_Email_key`(`Email`),
+    PRIMARY KEY (`Id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Book` (
+    `Id` INTEGER NOT NULL AUTO_INCREMENT,
+    `UserId` INTEGER NOT NULL,
+    `Title` VARCHAR(255) NOT NULL,
+    `Image` VARCHAR(255) NULL,
+    `Author` VARCHAR(255) NULL,
+    `Genre` VARCHAR(255) NULL,
+    `Published` DATETIME NULL,
+    `Pages` INTEGER NOT NULL DEFAULT 1,
+
+    PRIMARY KEY (`Id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `GeneralShelf` (
+    `Id` INTEGER NOT NULL AUTO_INCREMENT,
+    `Shelf` ENUM('READING', 'READ', 'WISHLIST') NOT NULL DEFAULT 'WISHLIST',
+    `UserId` INTEGER NOT NULL,
+    `BookId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `GeneralShelf_BookId_UserId_key`(`BookId`, `UserId`),
+    PRIMARY KEY (`Id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `BookStat` (
+    `Id` INTEGER NOT NULL AUTO_INCREMENT,
+    `UserId` INTEGER NOT NULL,
+    `BookId` INTEGER NOT NULL,
+    `ReadTime` DOUBLE NOT NULL,
+    `StartedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `FinishedAt` DATETIME(3) NULL,
+
+    PRIMARY KEY (`Id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ReadingSessionStat` (
+    `Id` INTEGER NOT NULL AUTO_INCREMENT,
+    `ReadTime` DOUBLE NOT NULL,
+    `Pages` INTEGER NOT NULL,
+    `BookStatId` INTEGER NOT NULL,
+    `CreatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`Id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Book` ADD CONSTRAINT `Book_UserId_fkey` FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `GeneralShelf` ADD CONSTRAINT `GeneralShelf_BookId_fkey` FOREIGN KEY (`BookId`) REFERENCES `Book`(`Id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `GeneralShelf` ADD CONSTRAINT `GeneralShelf_UserId_fkey` FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BookStat` ADD CONSTRAINT `BookStat_BookId_fkey` FOREIGN KEY (`BookId`) REFERENCES `Book`(`Id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BookStat` ADD CONSTRAINT `BookStat_UserId_fkey` FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ReadingSessionStat` ADD CONSTRAINT `ReadingSessionStat_BookStatId_fkey` FOREIGN KEY (`BookStatId`) REFERENCES `BookStat`(`Id`) ON DELETE RESTRICT ON UPDATE CASCADE;

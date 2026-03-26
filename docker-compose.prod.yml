@@ -1,0 +1,8 @@
+services:
+  backend:
+    restart: always
+    command: npm start
+
+  frontend:
+    restart: always
+    command: npm start
